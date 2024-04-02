@@ -35,11 +35,16 @@ class Class(models.Model):
                                        MaxValueValidator(100)])
 
 class Student(models.Model):
-    stud_id = models.CharField(max_length=20,primary_key=True)
+    stud_id = models.CharField(max_length=20, primary_key=True)
     s_password = models.CharField(max_length=30)
     in_out = models.CharField(max_length=5)
     f_name = models.CharField(max_length=20)
     l_name = models.CharField(max_length=20)
+    dob = models.DateField(default='1900-01-01') # Add DateField for date of birth (dob)
+    phone = models.CharField(max_length=15, default='000-000-0000')
+  # Add CharField for phone number
+    email = models.EmailField(default='example@example.com')# Add EmailField for email address
+    sem = models.IntegerField(default=1)  # Add IntegerField for semester (sem)
     dept_id = models.ForeignKey(Department, on_delete=models.CASCADE)
     class_id = models.ForeignKey(Class, on_delete=models.CASCADE)
 
@@ -111,3 +116,8 @@ class Teache(models.Model):
     class_id = models.ForeignKey(Class, on_delete=models.CASCADE)
     class Meta:
         unique_together = (("course_id", "class_id"),)
+
+class Subject(models.Model):
+    subject_name = models.CharField(max_length=50)
+    semester = models.IntegerField(validators=[MinValueValidator(1)])
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)

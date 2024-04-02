@@ -3,9 +3,11 @@ import axios from "axios";
 import styles from "./Home.module.css"; // Update the import statement
 import profileImage from "../static/profile-1.jpg";
 import { Link } from "react-router-dom";
+import { type } from "@testing-library/user-event/dist/type";
 
 function Home() {
   const [userData, setUserData] = useState(null);
+  const [labsData, setLabsData] = useState([]);
 
   useEffect(() => {
     // Fetch user data from the backend
@@ -15,6 +17,10 @@ function Home() {
           "http://127.0.0.1:8000/myapi/user-data/"
         );
         setUserData(response.data);
+        const labsResponse = await axios.get(
+          "http://127.0.0.1:8000/myapi/lab-details/"
+        );
+        setLabsData(labsResponse.data.lab_names);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -80,13 +86,17 @@ function Home() {
             </div>
             <div className={styles.about}>
               <h5>Course</h5>
-              <p>{userData ? userData.department : "Loading..."}</p>
+              <p>
+                {userData ? userData.department : "Loading..."},S
+                {userData ? userData.sem : "Loading..."}
+              </p>
+
               <h5>DOB</h5>
-              <p>29-Feb-2020</p>
-              <h5>Contact</h5>
-              <p>1234567890</p>
+              <p>{userData ? userData.dob : "Loading..."}</p>
+              <h5>Phone Number</h5>
+              <p>{userData ? userData.phone : "Loading..."}</p>
               <h5>Email</h5>
-              <p>unknown@gmail.com</p>
+              <p>{userData ? userData.email : "Loading..."}</p>
               <h5>Address</h5>
               <p>Ghost town Road, New York, America</p>
             </div>
@@ -95,8 +105,20 @@ function Home() {
 
         <main>
           <h1 style={{ fontWeight: 800, fontSize: "1.8rem" }}>Attendance</h1>
-          <div className={styles.subjects}>
-            {/* Add your subject components here */}
+
+          <div>
+            {labsData.map((lab, index) => (
+              <div className={styles.subjects}>
+                <div>
+                  <h1>{lab}</h1>
+                  <p>
+                    <div className={styles.percent}>
+                      <b>96%</b>
+                    </div>
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
 
           <div className={styles.timetable} id="timetable">

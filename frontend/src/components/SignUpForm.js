@@ -25,40 +25,85 @@ function SignUpForm() {
   const handleSignIn = async (e, user_type) => {
     e.preventDefault();
 
-    try {
-      const response = await axios.post("http://127.0.0.1:8000/myapi/login/", {
-        username: username,
-        password: password,
-        user_type: user_type,
-      });
+    if (user_type == "student") {
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:8000/myapi/login/",
+          {
+            username: username,
+            password: password,
+            user_type: user_type,
+          }
+        );
 
-      console.log("***********************************");
-      console.log(response.data); // Handle successful login response
-      const baseurl = "http://localhost:3000";
-      let redirecturl = response.data.redirect_url;
+        console.log("***********************************");
+        console.log(response.data); // Handle successful login response
+        const baseurl = "http://localhost:3000";
+        let redirecturl = response.data.redirect_url;
 
-      //const isAbsoluteUrl = redirecturl.startsWith("http://") || redirecturl.startsWith("https://");
+        //const isAbsoluteUrl = redirecturl.startsWith("http://") || redirecturl.startsWith("https://");
 
-      // if (!isAbsoluteUrl) {
-      // Construct absolute URL from relative path
-      // redirecturl = new URL(redirecturl, baseurl).toString();
-      // }
+        // if (!isAbsoluteUrl) {
+        // Construct absolute URL from relative path
+        // redirecturl = new URL(redirecturl, baseurl).toString();
+        // }
 
-      window.location.href = redirecturl;
+        window.location.href = redirecturl;
 
-      setEmail("");
-      setPassword("");
-    } catch (error) {
-      console.error("Error:", error); // Handle error
-      console.log("invalid credentials");
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        setErrorMessage(error.response.data.message);
-      } else {
-        setErrorMessage("An error occurred. Please try again later.");
+        setEmail("");
+        setPassword("");
+      } catch (error) {
+        console.error("Error:", error); // Handle error
+        console.log("invalid credentials");
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          setErrorMessage(error.response.data.message);
+        } else {
+          setErrorMessage("An error occurred. Please try again later.");
+        }
+      }
+    } else {
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:8000/fac/fac_login/",
+          {
+            username: username,
+            password: password,
+            user_type: user_type,
+          }
+        );
+
+        console.log("***********************************");
+        console.log(response.data); // Handle successful login response
+        const baseurl = "http://localhost:3000";
+        let redirecturl = response.data.redirect_url;
+
+        //const isAbsoluteUrl = redirecturl.startsWith("http://") || redirecturl.startsWith("https://");
+
+        // if (!isAbsoluteUrl) {
+        // Construct absolute URL from relative path
+        // redirecturl = new URL(redirecturl, baseurl).toString();
+        // }
+
+        window.location.href = redirecturl;
+
+        setEmail("");
+        setPassword("");
+      } catch (error) {
+        console.error("Error:", error); // Handle error
+        console.log("invalid credentials");
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          setErrorMessage(error.response.data.message);
+        } else {
+          setErrorMessage("An error occurred. Please try again later.");
+        }
       }
     }
   };

@@ -19,17 +19,19 @@ from .serializers import LoginSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Student, Department, Class
+from .models import Student, Department, Class,Subject
 
 fac=""
 dep=""
 cla=""
 cou=""
+sem=""
 
-def initial(fact,dept):
-    global fac,dep
+def initial(fact,dept,sems):
+    global fac,dep,sem
     fac=fact
     dep=dept
+    sem=sems
     return
 
 def tial(clat,cout):
@@ -41,21 +43,32 @@ def tial(clat,cout):
 
 @api_view(['GET'])
 def user_data_view(request):
-    print(fac)
-    print(dep)
     # Fetch the user data based on the authenticated user
     student = get_object_or_404(Student, stud_id=fac)
-    dept_name = student.dept_id.dept_name
-    class_name = student.class_id.class_id
 
     user_data = {
         "name": f"{student.f_name} {student.l_name}",
-        "department": dept_name,
-        "class": class_name,
+        "department": student.dept_id.dept_name,
+        "class": student.class_id.class_id,
+        "dob": student.dob.strftime('%Y-%m-%d'),  # Format dob as YYYY-MM-DD string
+        "phone": student.phone,
+        "email": student.email,
+        "sem": student.sem,
     }
 
     return Response(user_data)
 
+
+@api_view(['GET'])
+def get_lab_details(request):
+    
+     labs = Subject.objects.filter(semester=sem, department=dep)
+
+     lab_names = [lab.subject_name for lab in labs]
+     print(lab_names)
+
+     return Response({"lab_names": lab_names})
+    
 
 
 
@@ -78,7 +91,8 @@ def login_view(request):
                 print("user exists")
                 if std.get().s_password==password:
                      d=std.get().dept_id.dept_id
-                     initial(username,d)
+                     sem=std.get().sem
+                     initial(username,d,sem)
                      return Response({'redirect_url':'http://localhost:3000/home/'})
                 else:
                     return Response({'message':'invalid credentials'},status=status.HTTP_400_BAD_REQUEST)
