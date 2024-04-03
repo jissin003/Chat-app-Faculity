@@ -54,6 +54,10 @@ class Faculty(models.Model):
     f_name = models.CharField(max_length=20)
     l_name = models.CharField(max_length=20)
     dept_id = models.ForeignKey(Department, on_delete=models.CASCADE)
+    dob = models.DateField(default='1900-01-01') # Add DateField for date of birth (dob)
+    phone = models.CharField(max_length=15, default='000-000-0000')
+  # Add CharField for phone number
+    email = models.EmailField(default='example@example.com')# Add EmailField for email address
 
 class Calender(models.Model):
     i=models.AutoField(primary_key=True)

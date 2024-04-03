@@ -35,6 +35,25 @@ def initial(fact,dept):
     return
 
 
+@api_view(['GET'])
+def fac_data_view(request):
+    # Fetch the user data based on the authenticated user
+    student = get_object_or_404(Faculty, fac_id=fac)
+
+    user_data = {
+        "name": f"{student.f_name} {student.l_name}",
+        "department": student.dept_id.dept_name,
+        "id":fac,
+
+        "dob": student.dob.strftime('%Y-%m-%d'),  # Format dob as YYYY-MM-DD string
+        "phone": student.phone,
+        "email": student.email,
+        
+    }
+
+    return Response(user_data)
+
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])

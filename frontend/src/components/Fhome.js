@@ -14,7 +14,7 @@ function FHome() {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          "http://127.0.0.1:8000/myapi/user-data/"
+          "http://127.0.0.1:8000/fac/fac_data_get/"
         );
         setUserData(response.data);
         const labsResponse = await axios.get(
@@ -81,15 +81,14 @@ function FHome() {
                 <p>
                   Hey, <b>{userData ? userData.name : "Loading..."}</b>
                 </p>
-                <small className={styles.textMuted}>12102030</small>
+                <small className={styles.textMuted}>
+                  {userData ? userData.id : "Loading..."}
+                </small>
               </div>
             </div>
             <div className={styles.about}>
-              <h5>Course</h5>
-              <p>
-                {userData ? userData.department : "Loading..."},S
-                {userData ? userData.sem : "Loading..."}
-              </p>
+              <h5>Department</h5>
+              <p>{userData ? userData.department : "Loading..."}</p>
 
               <h5>DOB</h5>
               <p>{userData ? userData.dob : "Loading..."}</p>
