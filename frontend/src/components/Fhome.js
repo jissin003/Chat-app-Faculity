@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import styles from "./FHome.module.css"; // Update the import statement
+import styles from "./FHome.module.css";
 import profileImage from "../static/profile-1.jpg";
 import { Link } from "react-router-dom";
-import { type } from "@testing-library/user-event/dist/type";
+import Calendar from "../materials/Calendar";
 
 function FHome() {
   const [userData, setUserData] = useState(null);
   const [labsData, setLabsData] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null); // State to store the selected date
 
   useEffect(() => {
-    // Fetch user data from the backend
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
@@ -28,6 +28,11 @@ function FHome() {
 
     fetchUserData();
   }, []);
+
+  // Function to handle the selected date
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+  };
 
   return (
     <div>
@@ -106,18 +111,17 @@ function FHome() {
           <h1 style={{ fontWeight: 800, fontSize: "1.8rem" }}>Attendance</h1>
 
           <div>
-            {labsData.map((lab, index) => (
-              <div className={styles.subjects}>
-                <div>
-                  <h1>{lab}</h1>
-                  <p>
-                    <div className={styles.percent}>
-                      <b>96%</b>
-                    </div>
-                  </p>
-                </div>
+            <div className={styles.subjects}>
+              <div>
+                {/* Display the selected date */}
+                <h1>
+                  Date Selected:{" "}
+                  {selectedDate
+                    ? selectedDate.toLocaleDateString()
+                    : "No date selected"}
+                </h1>
               </div>
-            ))}
+            </div>
           </div>
 
           <div className={styles.timetable} id="timetable">
@@ -128,8 +132,16 @@ function FHome() {
         <div className={styles.right}>
           <div className={styles.announcements}>
             <h2 style={{ marginBottom: "0.8rem" }}>Announcements</h2>
-            <div className={styles.updates}>
+            <div
+              className={styles.updates}
+              style={{
+                paddingLeft: "0px",
+                width: "fit-content",
+              }}
+            >
               {/* Add your announcements components here */}
+              <Calendar onDateSelect={handleDateSelect} />{" "}
+              {/* Pass the handleDateSelect function as a prop */}
             </div>
           </div>
         </div>
