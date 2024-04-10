@@ -120,6 +120,8 @@ function FHome() {
                     ? selectedDate.toLocaleDateString()
                     : "No date selected"}
                 </h1>
+                <button style={{ marginRight: "20px" }}>Class</button>
+                <button>Batch</button>
               </div>
             </div>
           </div>

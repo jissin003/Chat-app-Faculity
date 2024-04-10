@@ -200,7 +200,9 @@ function SignUpForm() {
               <div
                 className={`${styles["overlay-panel"]} ${styles["overlay-left"]}`}
               >
-                <h1 style={styles.h1}>Are you a Student?</h1>
+                <h1 className={styles.h1} style={{ color: "white" }}>
+                  Are you a Student?
+                </h1>
                 <p style={{ color: "white" }}>
                   Then please try this student login
                 </p>
