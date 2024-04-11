@@ -125,3 +125,10 @@ class Subject(models.Model):
     subject_name = models.CharField(max_length=50)
     semester = models.IntegerField(validators=[MinValueValidator(1)])
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
+
+class Teaches(models.Model):
+    fac_id = models.ForeignKey(Faculty, on_delete=models.CASCADE)
+    subject_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.fac_id} - {self.subject_name}"

@@ -4,8 +4,15 @@ import styles from "./FHome.module.css";
 import profileImage from "../static/profile-1.jpg";
 import { Link } from "react-router-dom";
 import Calendar from "../materials/Calendar";
+import { Button, Menu, MenuItem } from "@mui/material";
 
 function FHome() {
+  const [classAnchorEl, setClassAnchorEl] = useState(null);
+  const [selectedClass, setSelectedClass] = useState(null);
+
+  const [batchAnchorEl, setBatchAnchorEl] = useState(null);
+  const [selectedBatch, setSelectedBatch] = useState(null);
+
   const [userData, setUserData] = useState(null);
   const [labsData, setLabsData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null); // State to store the selected date
@@ -18,7 +25,7 @@ function FHome() {
         );
         setUserData(response.data);
         const labsResponse = await axios.get(
-          "http://127.0.0.1:8000/myapi/lab-details/"
+          "http://127.0.0.1:8000/fac/get_lab_details/"
         );
         setLabsData(labsResponse.data.lab_names);
       } catch (error) {
@@ -32,6 +39,28 @@ function FHome() {
   // Function to handle the selected date
   const handleDateSelect = (date) => {
     setSelectedDate(date);
+  };
+
+  const handleClassClick = (event) => {
+    setClassAnchorEl(event.currentTarget);
+  };
+
+  const handleBatchClick = (event) => {
+    setBatchAnchorEl(event.currentTarget);
+  };
+
+  const handleClassClose = (classValue) => {
+    setClassAnchorEl(null);
+    if (classValue) {
+      setSelectedClass(classValue);
+    }
+  };
+
+  const handleBatchClose = (batchValue) => {
+    setBatchAnchorEl(null);
+    if (batchValue) {
+      setSelectedBatch(batchValue);
+    }
   };
 
   return (
@@ -114,14 +143,75 @@ function FHome() {
             <div className={styles.subjects}>
               <div>
                 {/* Display the selected date */}
-                <h1>
+                {/* <h1>
                   Date Selected:{" "}
                   {selectedDate
                     ? selectedDate.toLocaleDateString()
                     : "No date selected"}
                 </h1>
-                <button style={{ marginRight: "20px" }}>Class</button>
-                <button>Batch</button>
+                <h1>Selected class: {selectedClass}</h1>
+                <h1>Selected Batch: {selectedBatch}</h1> */}
+                <div>
+                  <button
+                    aria-controls="class-menu"
+                    aria-haspopup="true"
+                    onClick={handleClassClick}
+                    style={{ marginRight: "20px" }}
+                  >
+                    {selectedClass ? selectedClass : "Class"}
+                  </button>
+                  <Menu
+                    id="class-menu"
+                    anchorEl={classAnchorEl}
+                    keepMounted
+                    open={Boolean(classAnchorEl)}
+                    onClose={() => handleClassClose(null)}
+                  >
+                    {labsData.map((lab) => (
+                      <MenuItem key={lab} onClick={() => handleClassClose(lab)}>
+                        {lab}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+
+                  <button
+                    aria-controls="batch-menu"
+                    aria-haspopup="true"
+                    onClick={handleBatchClick}
+                  >
+                    {selectedBatch ? selectedBatch : "Batch"}
+                  </button>
+                  <Menu
+                    id="batch-menu"
+                    anchorEl={batchAnchorEl}
+                    keepMounted
+                    open={Boolean(batchAnchorEl)}
+                    onClose={() => handleBatchClose(null)}
+                  >
+                    <MenuItem onClick={() => handleBatchClose("1")}>1</MenuItem>
+                    <MenuItem onClick={() => handleBatchClose("2")}>2</MenuItem>
+                  </Menu>
+                </div>
+                <button
+                  type="submit"
+                  style={{
+                    marginTop: "10px",
+                    backgroundColor: "#2196f3",
+                    color: "white",
+
+                    border: "none",
+                    borderRadius: "10px",
+                    cursor: "pointer",
+                    fontSize: "10px",
+                  }}
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+            <div className={styles.subjects} id="timetable">
+              <div>
+                <h1>Hello gooys</h1>
               </div>
             </div>
           </div>

@@ -18,7 +18,7 @@ from .serializers import LoginSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from login.models import Student, Department, Class,Subject,Faculty
+from login.models import Student, Department, Class,Subject,Faculty,Teaches
 
 fac=""
 dep=""
@@ -89,3 +89,13 @@ def fac_login(request):
             # ...
 
         return Response(status=status.HTTP_200_OK)
+    
+@api_view(['GET'])
+def get_lab_details(request):
+    
+     labs = Teaches.objects.filter(fac_id=fac)
+
+     lab_names = [lab.subject_name for lab in labs]
+     print(lab_names)
+
+     return Response({"lab_names": lab_names})
