@@ -1,11 +1,12 @@
 # Create your views here.
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.middleware.csrf import get_token
 from django.views.decorators.cache import never_cache
 
-from login.models import Student
+from login.models import Student,CourseDiary
 
 # views.py
 from rest_framework.decorators import api_view,permission_classes
@@ -99,3 +100,43 @@ def get_lab_details(request):
      print(lab_names)
 
      return Response({"lab_names": lab_names})
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+@ensure_csrf_cookie
+def get_attendance_data(request):
+    if request.method == 'POST':
+        # Get the parameters from the POST request data
+        date = request.data.get('date')
+        subject_name = request.data.get('class')
+        batch = request.data.get('batch')
+        print(date)
+        print(subject_name)
+        print(batch)
+
+        # Filter the CourseDiary model based on the provided parameters
+        attendance_data = CourseDiary.objects.filter(
+            date=date,
+            subject__subject_name=subject_name,
+            batch=batch
+        )
+
+        # Serialize the filtered data
+        serialized_data = [
+            {
+                'date': data.date,
+                'subject_name': data.subject.subject_name,
+                'student_name': data.student.stud_id,
+                'batch': data.batch,
+                'attendance': data.attendance,
+                'vivamark': data.vivamark,
+                'output': data.output,
+                'programname': data.programname
+            }
+            for data in attendance_data
+        ]
+
+        # Return the serialized data as a JSON response
+        return JsonResponse({'attendance_data': serialized_data})
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)

@@ -12,6 +12,7 @@ function FHome() {
 
   const [batchAnchorEl, setBatchAnchorEl] = useState(null);
   const [selectedBatch, setSelectedBatch] = useState(null);
+  const [attendanceData, setAttendanceData] = useState(null);
 
   const [userData, setUserData] = useState(null);
   const [labsData, setLabsData] = useState([]);
@@ -60,6 +61,28 @@ function FHome() {
     setBatchAnchorEl(null);
     if (batchValue) {
       setSelectedBatch(batchValue);
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      // Format the selected date in YYYY-MM-DD format
+      const formattedDate = selectedDate.toISOString().split("T")[0];
+
+      // Make a POST request to the backend API endpoint
+      const response = await axios.post(
+        "http://127.0.0.1:8000/fac/get_attendance_data/",
+        {
+          date: formattedDate,
+          class: selectedClass,
+          batch: selectedBatch,
+        }
+      );
+
+      // Set the fetched attendance data
+      setAttendanceData(response.data.attendance_data);
+    } catch (error) {
+      console.error("Error fetching attendance data:", error);
     }
   };
 
@@ -204,6 +227,7 @@ function FHome() {
                     cursor: "pointer",
                     fontSize: "10px",
                   }}
+                  onClick={handleSubmit}
                 >
                   Submit
                 </button>
@@ -211,7 +235,38 @@ function FHome() {
             </div>
             <div className={styles.subjects} id="timetable">
               <div>
-                <h1>Hello gooys</h1>
+                <div className={styles.subjects} id="timetable">
+                  <h1>Attendance Data</h1>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Subject</th>
+                        <th>Student Name</th>
+                        <th>Batch</th>
+                        <th>Attendance</th>
+                        <th>Vivamark</th>
+                        <th>Output</th>
+                        <th>Program Name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {attendanceData &&
+                        attendanceData.map((item, index) => (
+                          <tr key={index}>
+                            <td>{item.date}</td>
+                            <td>{item.subject_name}</td>
+                            <td>{item.student_name}</td>
+                            <td>{item.batch}</td>
+                            <td>{item.attendance}</td>
+                            <td>{item.vivamark}</td>
+                            <td>{item.output}</td>
+                            <td>{item.programname}</td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>

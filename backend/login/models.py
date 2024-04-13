@@ -132,3 +132,22 @@ class Teaches(models.Model):
 
     def __str__(self):
         return f"{self.fac_id} - {self.subject_name}"
+
+class CourseDiary(models.Model):
+    date = models.DateField()
+    name = models.CharField(max_length=100)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
+    ATTENDANCE_CHOICES = [
+        ('Present', 'Present'),
+        ('Absent', 'Absent'),
+    ]
+    attendance = models.CharField(max_length=10, choices=ATTENDANCE_CHOICES)
+    vivamark = models.FloatField()
+    OUTPUT_CHOICES = [
+        ('Verified', 'Verified'),
+        ('Not Verified', 'Not Verified'),
+    ]
+    output = models.CharField(max_length=12, choices=OUTPUT_CHOICES)
+    programname = models.CharField(max_length=100)
+    batch = models.IntegerField(choices=[(1, '1'), (2, '2')], null=True)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, null=True)
