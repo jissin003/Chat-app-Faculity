@@ -47,6 +47,7 @@ class Student(models.Model):
     sem = models.IntegerField(default=1)  # Add IntegerField for semester (sem)
     dept_id = models.ForeignKey(Department, on_delete=models.CASCADE)
     class_id = models.ForeignKey(Class, on_delete=models.CASCADE)
+    batch = models.IntegerField(default=1)
 
 class Faculty(models.Model):
     fac_id = models.CharField(max_length=20,primary_key=True)

@@ -7,6 +7,8 @@ import Calendar from "../materials/Calendar";
 import { Button, Menu, MenuItem } from "@mui/material";
 
 function FHome() {
+  const [isVisible, setIsVisible] = useState(false);
+
   const [classAnchorEl, setClassAnchorEl] = useState(null);
   const [selectedClass, setSelectedClass] = useState(null);
 
@@ -66,6 +68,7 @@ function FHome() {
 
   const handleSubmit = async () => {
     try {
+      setIsVisible(true);
       // Format the selected date in YYYY-MM-DD format
       const formattedDate = selectedDate.toISOString().split("T")[0];
 
@@ -96,14 +99,19 @@ function FHome() {
           </h2>
         </div>
         <div className={styles.navbar}>
-          <a href="index.html" className={styles.active}>
-            <span className="material-icons-sharp">home</span>
-            <h3>Home</h3>
-          </a>
-          <a href="marks.html ">
-            <span className="material-icons-sharp">today</span>
-            <h3>Marks</h3>
-          </a>
+          <Link to="/faculty_home">
+            <a href="index.html" className={styles.active}>
+              <span className="material-icons-sharp">home</span>
+              <h3>Home</h3>
+            </a>
+          </Link>
+          <Link to="/course_diary">
+            <a href="marks.html ">
+              <span className="material-icons-sharp">today</span>
+              <h3>Course Diary</h3>
+            </a>
+          </Link>
+
           <a href="doubts.html">
             <span className="material-icons-sharp">grid_view</span>
             <h3>Doubts</h3>
@@ -233,42 +241,44 @@ function FHome() {
                 </button>
               </div>
             </div>
-            <div className={styles.subjects} id="timetable">
-              <div>
-                <div className={styles.subjects} id="timetable">
-                  <h1>Attendance Data</h1>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Date</th>
-                        <th>Subject</th>
-                        <th>Student Name</th>
-                        <th>Batch</th>
-                        <th>Attendance</th>
-                        <th>Vivamark</th>
-                        <th>Output</th>
-                        <th>Program Name</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {attendanceData &&
-                        attendanceData.map((item, index) => (
-                          <tr key={index}>
-                            <td>{item.date}</td>
-                            <td>{item.subject_name}</td>
-                            <td>{item.student_name}</td>
-                            <td>{item.batch}</td>
-                            <td>{item.attendance}</td>
-                            <td>{item.vivamark}</td>
-                            <td>{item.output}</td>
-                            <td>{item.programname}</td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
+            {isVisible && (
+              <div className={styles.subjects} id="timetable">
+                <div>
+                  <div className={styles.subjects} id="timetable">
+                    <h1>Attendance Data</h1>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Subject</th>
+                          <th>Student Name</th>
+                          <th>Batch</th>
+                          <th>Attendance</th>
+                          <th>Vivamark</th>
+                          <th>Output</th>
+                          <th>Program Name</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {attendanceData &&
+                          attendanceData.map((item, index) => (
+                            <tr key={index}>
+                              <td>{item.date}</td>
+                              <td>{item.subject_name}</td>
+                              <td>{item.student_name}</td>
+                              <td>{item.batch}</td>
+                              <td>{item.attendance}</td>
+                              <td>{item.vivamark}</td>
+                              <td>{item.output}</td>
+                              <td>{item.programname}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className={styles.timetable} id="timetable">

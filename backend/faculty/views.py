@@ -14,12 +14,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.forms import AuthenticationForm
 from rest_framework.permissions import AllowAny
-from .serializers import LoginSerializer
+from .serializers import  LoginSerializer
 
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from login.models import Student, Department, Class,Subject,Faculty,Teaches
+from django.views.decorators.csrf import csrf_exempt
 
 fac=""
 dep=""
@@ -140,3 +141,89 @@ def get_attendance_data(request):
         return JsonResponse({'attendance_data': serialized_data})
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def get_student_names(request):
+    if request.method == 'POST':
+        subject_name = request.data.get('class')  # Update key to match frontend
+        batch = request.data.get('batch')
+        # Ensure that subject_name and batch have correct values
+        
+
+        try:
+            subject = Subject.objects.get(subject_name=subject_name)
+            students = Student.objects.filter(sem=subject.semester, batch=batch)
+            student_names = [f"{student.f_name} {student.l_name}" for student in students]
+            print(student_names)
+            return JsonResponse({'student_names': student_names})
+        except Subject.DoesNotExist:
+            return JsonResponse({'error': 'Subject not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def save_course_diary(request):
+    if request.method == 'POST':
+        data = request.POST
+        print(data)
+        date = data.get('date')
+        subject_name = data.get('subject')
+        batch = data.get('batch')
+        student_names = request.POST.getlist('studentName[]')
+        attendances = request.POST.getlist('attendance[]')
+        viva_marks = request.POST.getlist('vivaMark[]')
+        outputs = request.POST.getlist('output[]')
+        program_names = request.POST.getlist('programName[]')
+
+        # Get or create the Subject instance
+        subject, _ = Subject.objects.get_or_create(subject_name=subject_name)
+
+        for index, student_name in enumerate(student_names):
+            # Get or create the Student instance
+            names = student_name.split()
+            first_name = names[0]
+            last_name = ' '.join(names[1:])  # Joining the remaining parts as the last name
+
+            # Get or create the Student instance
+            student, _ = Student.objects.get_or_create(f_name=first_name, l_name=last_name)
+
+            attendance = 'Present'  # Default attendance value
+            viva_mark = 0.0  # Default viva mark value
+            output = 'Not Verified'  # Default output value
+            program_name = ''  # Default program name value
+
+            # Check if index is within the bounds of the arrays
+            if index < len(attendances):
+                
+                attendance = attendances[index]
+                print(attendance)
+
+            if index < len(viva_marks):
+                viva_mark = viva_marks[index]
+
+            if index < len(outputs):
+                output = outputs[index]
+
+            if index < len(program_names):
+                program_name = program_names[index]
+
+            # Create a new CourseDiary instance
+            course_diary = CourseDiary(
+                date=date,
+                name=student_name,
+                student=student,
+                attendance=attendance,
+                vivamark=viva_mark,
+                output=output,
+                programname=program_name,
+                batch=batch,
+                subject=subject
+            )
+            course_diary.save()
+
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method'})
