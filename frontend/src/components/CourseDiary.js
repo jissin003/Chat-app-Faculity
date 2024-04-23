@@ -174,41 +174,51 @@ function CourseDiary() {
   return (
     <div>
       <header className={styles.header}>
-        <div className={styles.logo} title="University Management System">
+
+      <div className={styles.logo} title="University Management System">
           <h2>
-            F<span className={styles.danger}>A</span>CULTY D
-            <span className={styles.danger}>A</span>SHBOARD
+            FACULITY DASHBOARD
           </h2>
         </div>
+        
         <div className={styles.navbar}>
-          <Link to="/faculty_home">
-            <a href="index.html">
-              <span className="material-icons-sharp">home</span>
-              <h3>Home</h3>
-            </a>
-          </Link>
-          <Link to="/course_diary">
-            <a href="marks.html " className={styles.active}>
-              <span className="material-icons-sharp">today</span>
-              <h3>Course Diary</h3>
-            </a>
-          </Link>
 
-          <a href="doubts.html">
-            <span className="material-icons-sharp">grid_view</span>
-            <h3>Doubts</h3>
-          </a>
-          <a href="password.html">
-            <span className="material-icons-sharp">password</span>
-            <h3>Change Password</h3>
-          </a>
-          <a href="#">
-            <Link to="/login">
-              <span className="material-icons-sharp">logout</span>
-              <h3>Logout</h3>
-            </Link>
-          </a>
-        </div>
+          <Link  to="/faculty_home">
+                  <a href="#">
+                    <span className="material-icons-sharp">home</span>
+                    <h3>Home</h3>
+                  </a>
+              </Link>
+
+              <Link to="/course_diary">
+                  <a href="#" className={styles.active}>
+                    <span className="material-icons-sharp">today</span>
+                    <h3>Course Diary</h3>
+                  </a>
+              </Link>
+
+              <Link to="/chat">
+                  <a href="#">
+                    <span className="material-icons-sharp">grid_view</span>
+                    <h3>Doubts</h3>
+                  </a>
+              </Link>
+
+              <Link to="password.html">
+                <a href="#">
+                  <span className="material-icons-sharp">password</span>
+                  <h3>Change Password</h3>
+                </a>
+              </Link>
+
+              <Link to="/login">
+                <a href="#"> 
+                  <span className="material-icons-sharp">logout</span>
+                  <h3>Logout</h3>
+                </a>
+              </Link>
+         </div>
+
         <div id="profile-btn" className={styles.profileBtn}>
           <span className="material-icons-sharp">person</span>
         </div>
